@@ -69,58 +69,116 @@
       </div>
     </div>
     <script>
-            //Denne JS-koden er laget klar for deg. Den trenger du ikke endre på.
+      //Names:
+      //Påkrevde teknikker: alert, function, onclick/eventListener, manipulering av array-objekter:
+      document.addEventListener("DOMContentLoaded", function () {
+        let healerNameTxt = document.getElementById("healer-name-txt");
+        healerNameTxt.textContent = "Henriette Healer";
 
-            //Stats for heroes
-            let heroesArray = [
-              {
-                id: 0,
-                name: "Henriette Healer",
-                maxHP: 400,
-                currentHP: 400,
-                damage: 100,
-                alive: true,
-              },
-              {
-                id: 1,
-                name: "Ariana archer",
-                maxHP: 500,
-                currentHP: 500,
-                damage: 400,
-                alive: true,
-              },
-              {
-                id: 2,
-                name: "Wyona Warrior",
-                maxHP: 600,
-                currentHP: 600,
-                damage: 400,
-                alive: true,
-              },
-            ];
+        let archerNameTxt = document.getElementById("archer-name-txt");
+        archerNameTxt.textContent = "Ariana archer";
 
-            let dragonObject = {
-              name: "Daar Dragon",
-              maxHP: 2000,
-              currentHP: 2000,
-              damage: 200,
-              alive: true,
-            };
+        let warriorNameTxt = document.getElementById("warrior-name-txt");
+        warriorNameTxt.textContent = "Wyona Warrior";
 
-            //Påkrevde teknikker: alert, function, onclick/eventListener, manipulering av
-      array-objekter:
+        let dragonNameTxt = document.getElementById("dragon-name-txt");
+        dragonNameTxt.textContent = "Daar Dragon";
+      });
 
-      let healerNameTxt = document.querySelector("#healer-name.txt");
-      healerNameTxt.textContent = "Henriette Healer";
+      //Stats for heroes
+      let heroesArray = [
+        {
+          id: 0,
+          name: "Henriette Healer",
+          maxHP: 400,
+          currentHP: 400,
+          damage: 100,
+          alive: true,
+        },
+        {
+          id: 1,
+          name: "Ariana archer",
+          maxHP: 500,
+          currentHP: 500,
+          damage: 400,
+          alive: true,
+        },
+        {
+          id: 2,
+          name: "Wyona Warrior",
+          maxHP: 600,
+          currentHP: 600,
+          damage: 400,
+          alive: true,
+        },
+      ];
 
-      let archerNameTxt = document.querySelector("#archer-name-txt");
-      archerNameTxt.textContent = "Ariana archer";
+      let dragonObject = {
+        name: "Daar Dragon",
+        maxHP: 2000,
+        currentHP: 2000,
+        damage: 200,
+        alive: true,
+      };
+      //Health txt for each hero:
+      const healerHealthTxt = document.getElementById("healer-health-txt");
+      const archerHealthTxt = document.getElementById("archer-health-txt");
+      const warriorHealthTxt = document.getElementById("warrior-health-txt");
 
-      let warriorNameTxt = document.querySelector("#warrior-name-txt");
-      warriorNameTxt.textContent = "Wyona Warrior";
+      //Update healthinformasion for each hero:
+      function updateHeroHealthText() {
+        healerHealthTxt.textContent = `${heroesArray[0].currentHP} / ${heroesArray[0].maxHP} HP`;
+        archerHealthTxt.textContent = `${heroesArray[1].currentHP} / ${heroesArray[1].maxHP} HP`;
+        warriorHealthTxt.textContent = `${heroesArray[2].currentHP} / ${heroesArray[2].maxHP} HP`;
+      }
+      //Update healthinformasion for dragon:
+      const dragonHealthTxt = document.querySelector(".dragon-health-txt");
+      function updateDragonHealthText() {
+        dragonHealthTxt.textContent = `(${dragonObject.currentHP} / ${dragonObject.maxHP}) HP`;
+      }
+      // Attack function:
+      function attackDragon(heroIndex) {
+        const hero = heroesArray[heroIndex];
+        const heroName = hero.name;
+        const heroDamage = hero.damage;
 
-      let dragonNameTxt = document.querySelector("#dragon-name-txt");
-      dragonNameTxt.textContent = "Daar Dragon";
+        // Do damage on the dragon
+        dragonObject.currentHP -= heroDamage;
+
+        // check if dragon is still alive:
+        if (dragonObject.currentHP <= 0) {
+          dragonObject.currentHP = 0;
+          dragonObject.alive = false;
+        }
+
+        // Update the dragon's health display:
+        updateDragonHealthText();
+
+        // Display the message:
+        const message = `${heroName} har gjort ${heroDamage} skade på ${dragonObject.name}`;
+        alert(message);
+
+        // Update health info for each hero:
+        updateHeroHealthText();
+      }
+
+      // Add click listener for each hero
+
+      document
+        .querySelector(".img-container.healer")
+        .addEventListener("click", function () {
+          attackDragon(0);
+        });
+      document
+        .querySelector(".img-container.archer")
+        .addEventListener("click", function () {
+          attackDragon(1);
+        });
+      document
+        .querySelector(".img-container.warrior")
+        .addEventListener("click", function () {
+          attackDragon(2);
+        });
     </script>
   </body>
 </html>
