@@ -115,8 +115,8 @@
 
       let dragonObject = {
         name: "Daar Dragon",
-        maxHP: 2000,
-        currentHP: 2000,
+        maxHP: 3000,
+        currentHP: 3000,
         damage: 200,
         alive: true,
       };
@@ -156,39 +156,54 @@
 
         // Display the message:
         const message = `${heroName} har gjort ${heroDamage} skade på ${dragonObject.name}`;
-        alert(message);
+        // alert(message);
 
         dragonCounterAttack();
       }
-
+      // Dragon counterAttack:
       function dragonCounterAttack() {
-        const aliveHeroes = heroesArray.filter((hero) => hero.alive);
+        let aliveHeroes = heroesArray.filter((hero) => hero.alive);
         let targetHero;
-
+        console.log("hero length " + aliveHeroes.length);
         if (aliveHeroes.length > 0) {
           //choose a random hero to attack
           const randomTargetHero = Math.floor(
             Math.random() * aliveHeroes.length
           );
           targetHero = aliveHeroes[randomTargetHero];
-        }
 
-        const dragonAttackDamage = dragonObject.damage;
-        targetHero.currentHP -= dragonAttackDamage;
+          const dragonAttackDamage = dragonObject.damage;
+          targetHero.currentHP -= dragonAttackDamage;
 
-        //Update health info for the RandomTargeted hero:
+          //Update health info for the RandomTargeted hero:
 
-        updateHeroHealthText();
+          updateHeroHealthText();
 
-        // Check if the targeted hero is dead:
-        if (targetHero.currentHP <= 0) {
-          targetHero.currentHP = 0;
-          targetHero.alive = false;
+          // Check if the targeted hero is dead:
+          if (targetHero.currentHP <= 0) {
+            targetHero.currentHP = 0;
+            targetHero.alive = false;
+
+            if (targetHero.name == "Henriette Healer") {
+              document.querySelector(".img-container.healer").remove();
+            } else if (targetHero.name == "Ariana archer") {
+              document.querySelector(".img-container.archer").remove();
+            } else if (targetHero.name == "Wyona Warrior") {
+              document.querySelector(".img-container.warrior").remove();
+            }
+            if (aliveHeroes.length == -0) {
+              console.log("spillet er tapt");
+              alert("Spillet er tapt!");
+            }
+          }
+        } else {
+          console.log("spillet er tapt nede ");
+          alert("Spillet er tapt nede !");
         }
 
         // Display message when the dragon makes counter attack:
         const counterAttackMessage = `${dragonObject.name} har angrepet ${targetHero.name}!`;
-        alert(counterAttackMessage);
+        // alert(counterAttackMessage);
       }
       // Add click listener for each hero
       document
@@ -203,6 +218,11 @@
         });
       document
         .querySelector(".img-container.warrior")
+        .addEventListener("click", function () {
+          attackDragon(2);
+        });
+      document
+        .querySelector(".img-container.dragon-container")
         .addEventListener("click", function () {
           attackDragon(2);
         });
