@@ -64,27 +64,11 @@
       <!-- Bildecontainer for fienden -->
       <div class="enemy-container">
         <div class="img-container dragon-container">
-          <img class="dragon" src="assets/dragon.png" />
+          <img id="dragon-containerr" class="dragon" src="assets/dragon.png" />
         </div>
       </div>
     </div>
     <script>
-      //Names:
-      //Påkrevde teknikker: alert, function, onclick/eventListener, manipulering av array-objekter:
-      document.addEventListener("DOMContentLoaded", function () {
-        let healerNameTxt = document.getElementById("healer-name-txt");
-        healerNameTxt.textContent = "Henriette Healer";
-
-        let archerNameTxt = document.getElementById("archer-name-txt");
-        archerNameTxt.textContent = "Ariana archer";
-
-        let warriorNameTxt = document.getElementById("warrior-name-txt");
-        warriorNameTxt.textContent = "Wyona Warrior";
-
-        let dragonNameTxt = document.getElementById("dragon-name-txt");
-        dragonNameTxt.textContent = "Daar Dragon";
-      });
-
       //Stats for heroes
       let heroesArray = [
         {
@@ -115,22 +99,37 @@
 
       let dragonObject = {
         name: "Daar Dragon",
-        maxHP: 3000,
-        currentHP: 3000,
+        maxHP: 2000,
+        currentHP: 2000,
         damage: 200,
         alive: true,
       };
+
+      //Updates names
+      let healerNameTxt = document.getElementById("healer-name-txt");
+      healerNameTxt.textContent = heroesArray[0].name;
+
+      let archerNameTxt = document.getElementById("archer-name-txt");
+      archerNameTxt.textContent = heroesArray[1].name;
+
+      let warriorNameTxt = document.getElementById("warrior-name-txt");
+      warriorNameTxt.textContent = heroesArray[2].name;
+
+      let dragonNameTxt = document.getElementById("dragon-name-txt");
+      dragonNameTxt.textContent = dragonObject.name;
+
       //Health txt for each hero:
       const healerHealthTxt = document.getElementById("healer-health-txt");
       const archerHealthTxt = document.getElementById("archer-health-txt");
       const warriorHealthTxt = document.getElementById("warrior-health-txt");
+      const dragonDiv = document.getElementById("dragon-containerr");
       //Update healthinformasion for each hero:
       function updateHeroHealthText() {
         healerHealthTxt.textContent = `${heroesArray[0].currentHP} / ${heroesArray[0].maxHP} HP`;
         archerHealthTxt.textContent = `${heroesArray[1].currentHP} / ${heroesArray[1].maxHP} HP`;
         warriorHealthTxt.textContent = `${heroesArray[2].currentHP} / ${heroesArray[2].maxHP} HP`;
       }
-      //Update healthinformasion for dragon:
+      //Update healthinformation for dragon:
       const dragonHealthTxt = document.querySelector(".dragon-health-txt");
       function updateDragonHealthText() {
         dragonHealthTxt.textContent = `${dragonObject.currentHP} / ${dragonObject.maxHP} HP`;
@@ -145,18 +144,37 @@
         // Do damage on the dragon
         dragonObject.currentHP -= heroDamage;
 
+        updateDragonHealthText();
+        // Henriette healer healing other hero friends:
+        if (heroName == "Henriette Healer") {
+          let healersHeroFriends = heroesArray.filter(
+            (hero) =>
+              hero.name != heroName && //fjerner henriette
+              hero.alive && //fjerne som ikke er i live
+              hero.currentHP != hero.maxHP //Ulik HP-verdi
+          );
+
+          if (healersHeroFriends.length > 0) {
+            alert(
+              heroName + " healer " + healersHeroFriends[0].name + " med 100 HP"
+            );
+            aliveHeroes[0].currentHP += 100;
+            updateHeroHealthText();
+          }
+        }
         // check if dragon is still alive:
         if (dragonObject.currentHP <= 0) {
           dragonObject.currentHP = 0;
           dragonObject.alive = false;
+          //updateDragonHealthText();
+          alert("Gratulerer, du har vunnet spillet!");
         }
 
         // Update the dragon's health display:
-        updateDragonHealthText();
 
         // Display the message:
         const message = `${heroName} har gjort ${heroDamage} skade på ${dragonObject.name}`;
-        // alert(message);
+        alert(message);
 
         dragonCounterAttack();
       }
@@ -164,7 +182,7 @@
       function dragonCounterAttack() {
         let aliveHeroes = heroesArray.filter((hero) => hero.alive);
         let targetHero;
-        console.log("hero length " + aliveHeroes.length);
+
         if (aliveHeroes.length > 0) {
           //choose a random hero to attack
           const randomTargetHero = Math.floor(
@@ -191,19 +209,16 @@
             } else if (targetHero.name == "Wyona Warrior") {
               document.querySelector(".img-container.warrior").remove();
             }
-            if (aliveHeroes.length == -0) {
-              console.log("spillet er tapt");
-              alert("Spillet er tapt!");
-            }
           }
-        } else {
-          console.log("spillet er tapt nede ");
-          alert("Spillet er tapt nede !");
-        }
 
-        // Display message when the dragon makes counter attack:
-        const counterAttackMessage = `${dragonObject.name} har angrepet ${targetHero.name}!`;
-        // alert(counterAttackMessage);
+          // Display message when the dragon makes counter attack:
+          const counterAttackMessage = `${dragonObject.name} har angrepet ${targetHero.name}!`;
+          alert(counterAttackMessage);
+          aliveHeroes = heroesArray.filter((hero) => hero.alive);
+          if (aliveHeroes.length == 0) {
+            alert(`Spillet er tapt!, ${dragonObject.name} har vunnet!`);
+          }
+        }
       }
       // Add click listener for each hero
       document
