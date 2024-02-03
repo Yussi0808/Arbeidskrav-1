@@ -106,24 +106,24 @@
       };
 
       //Updates names
-      let healerNameTxt = document.getElementById("healer-name-txt");
+      const healerNameTxt = document.getElementById("healer-name-txt");
       healerNameTxt.textContent = heroesArray[0].name;
 
-      let archerNameTxt = document.getElementById("archer-name-txt");
+      const archerNameTxt = document.getElementById("archer-name-txt");
       archerNameTxt.textContent = heroesArray[1].name;
 
-      let warriorNameTxt = document.getElementById("warrior-name-txt");
+      const warriorNameTxt = document.getElementById("warrior-name-txt");
       warriorNameTxt.textContent = heroesArray[2].name;
 
-      let dragonNameTxt = document.getElementById("dragon-name-txt");
+      const dragonNameTxt = document.getElementById("dragon-name-txt");
       dragonNameTxt.textContent = dragonObject.name;
 
       //Health txt for each hero:
       const healerHealthTxt = document.getElementById("healer-health-txt");
       const archerHealthTxt = document.getElementById("archer-health-txt");
       const warriorHealthTxt = document.getElementById("warrior-health-txt");
-      const dragonDiv = document.getElementById("dragon-containerr");
-      //Update healthinformasion for each hero:
+
+      //Update healthinformasion for each hero: (Her kunne vi også ha brukt.innerHTML istedenfor .textContent)
       function updateHeroHealthText() {
         healerHealthTxt.textContent = `${heroesArray[0].currentHP} / ${heroesArray[0].maxHP} HP`;
         archerHealthTxt.textContent = `${heroesArray[1].currentHP} / ${heroesArray[1].maxHP} HP`;
@@ -137,26 +137,30 @@
 
       // Attack from Hero's:
       function attackDragon(heroIndex) {
-        const hero = heroesArray[heroIndex];
+        const hero = heroesArray[heroIndex]; //
         const heroName = hero.name;
         const heroDamage = hero.damage;
+        console.log("Hero Index", heroIndex);
 
         // Do damage on the dragon
         dragonObject.currentHP -= heroDamage;
 
         updateDragonHealthText();
         // Henriette healer healing other hero friends:
-        if (heroName == "Henriette Healer") {
+        if (healerName == "Henriette Healer") {
           let healersHeroFriends = heroesArray.filter(
             (hero) =>
-              hero.name != heroName && //fjerner henriette
+              hero.name != healerName && //fjerner henriette healer
               hero.alive && //fjerne som ikke er i live
               hero.currentHP != hero.maxHP //Ulik HP-verdi
           );
 
           if (healersHeroFriends.length > 0) {
             alert(
-              heroName + " healer " + healersHeroFriends[0].name + " med 100 HP"
+              healerName +
+                " healer " +
+                healersHeroFriends[0].name +
+                " med 100 HP"
             );
             aliveHeroes[0].currentHP += 100;
             updateHeroHealthText();
@@ -166,13 +170,11 @@
         if (dragonObject.currentHP <= 0) {
           dragonObject.currentHP = 0;
           dragonObject.alive = false;
-          //updateDragonHealthText();
+          updateDragonHealthText();
           alert("Gratulerer, du har vunnet spillet!");
         }
 
-        // Update the dragon's health display:
-
-        // Display the message:
+        // Display the message: (template string)
         const message = `${heroName} har gjort ${heroDamage} skade på ${dragonObject.name}`;
         alert(message);
 
@@ -185,16 +187,13 @@
 
         if (aliveHeroes.length > 0) {
           //choose a random hero to attack
-          const randomTargetHero = Math.floor(
-            Math.random() * aliveHeroes.length
-          );
+          let randomTargetHero = Math.floor(Math.random() * aliveHeroes.length);
           targetHero = aliveHeroes[randomTargetHero];
 
           const dragonAttackDamage = dragonObject.damage;
           targetHero.currentHP -= dragonAttackDamage;
 
           //Update health info for the RandomTargeted hero:
-
           updateHeroHealthText();
 
           // Check if the targeted hero is dead:
@@ -220,7 +219,7 @@
           }
         }
       }
-      // Add click listener for each hero
+      // Add click listener for each hero (hendelselytter)
       document
         .querySelector(".img-container.healer")
         .addEventListener("click", function () {
